@@ -7,6 +7,7 @@ import "./styles/reset.css";
 function App() {
     const [currentScore, setCurrentScore] = useState(0);
     const [bestScore, setBestScore] = useState(0);
+    const [gameStatus, setGameStatus] = useState(true);
     return (
         <>
             <div
@@ -22,7 +23,8 @@ function App() {
             >
                 <Header scores={{ bestScore, currentScore }}></Header>
                 <GameBoard
-                    setScores={{ setBestScore, setCurrentScore }}
+                    setScoresProp={{ setBestScore, setCurrentScore }}
+                    gameStatusPrp={{ gameStatus, setGameStatus }}
                 ></GameBoard>
             </div>
         </>
