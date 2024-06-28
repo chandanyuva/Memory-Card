@@ -1,13 +1,25 @@
+import { useEffect, useState } from "react";
 import { Card } from "./Card";
 import { ImageAPI } from "./ImageAPI";
+import { Loader } from "./Loader";
 
-const imageArray = await ImageAPI();
-// console.log(imageArray);
-let cards = await imageArray.map((ele) => {
-    return <Card url={ele.url} key={ele.key}></Card>;
-});
-// console.log(cards);
 function GameBoard() {
+    const newLoader = Loader();
+    let [imageArray, setImageArray] = useState([]);
+
+    useEffect(() => {
+        async function getCardsFromApi() {
+            const images = await ImageAPI();
+            // console.log(images);
+            setImageArray(
+                await images.map((ele) => {
+                    return <Card url={ele.url} key={ele.key}></Card>;
+                })
+            );
+        }
+        getCardsFromApi();
+    }, []);
+    // console.log(imageArray.length);
     return (
         <div
             style={{
@@ -19,9 +31,11 @@ function GameBoard() {
                 gridTemplateColumns: "repeat(1fr,6)",
                 gridTemplateRows: "1fr 1fr",
                 gridAutoFlow: "column dense",
+                alignItems: "center",
+                justifyItems: "center",
             }}
         >
-            {cards}
+            {imageArray.length === 0 ? newLoader : imageArray}
         </div>
     );
 }
