@@ -1,25 +1,38 @@
-import { useEffect, useState } from "react";
-import { Card } from "./Card";
+// import { useEffect, useState } from "react";
 import { ImageAPI } from "./ImageAPI";
 import { Loader } from "./Loader";
+import { useEffect, useState } from "react";
+import { Shuffle } from "../utilFunctions/Shuffle";
+// import { CardGrid } from "./CardGrid";
 
-function GameBoard() {
-    const newLoader = Loader();
-    let [imageArray, setImageArray] = useState([]);
+import { createGrid } from "./Grid";
+// import { CardGrid } from "./CardsGridGen";
 
+function GameBoard(props) {
+    // const { setScoresProp, gameStatusPrp } = props;
+    const showLoader = Loader();
+    // let sampleData = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    let [imagesLoaded, setImagesLoaded] = useState(false);
+    let [imageUrls, setImageUrls] = useState([]);
+    async function getImages() {
+        let urls = await ImageAPI();
+        setImageUrls(await urls);
+    }
     useEffect(() => {
-        async function getCardsFromApi() {
-            const images = await ImageAPI();
-            // console.log(images);
-            setImageArray(
-                await images.map((ele) => {
-                    return <Card url={ele.url} key={ele.key}></Card>;
-                })
-            );
-        }
-        getCardsFromApi();
+        getImages();
+        return setImagesLoaded(true);
     }, []);
-    // console.log(imageArray.length);
+
+    console.log(imagesLoaded);
+    // console.log(cards);
+    const [grid, setGrid] = useState(createGrid(imageUrls));
+    // console.log(grid);
+    // setCardsArray();
+    function shuffleImageFun() {
+        let shuffledData = Shuffle(imageUrls);
+        setGrid(createGrid(shuffledData));
+    }
+    // console.log(grid);
     return (
         <div
             style={{
@@ -28,14 +41,17 @@ function GameBoard() {
                 margin: "4px",
                 padding: "2px",
                 display: "grid",
-                gridTemplateColumns: "repeat(1fr,6)",
+                // gridTemplateColumns: "repeat(1fr,6)",
+                gridTemplateColumns: "1fr",
                 gridTemplateRows: "1fr 1fr",
                 gridAutoFlow: "column dense",
                 alignItems: "center",
                 justifyItems: "center",
             }}
         >
-            {imageArray.length === 0 ? newLoader : imageArray}
+            {grid}
+            {/* {imagesLoaded ? showLoader : grid} */}
+            <button onClick={shuffleImageFun}>shuffle</button>
         </div>
     );
 }

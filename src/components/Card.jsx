@@ -2,10 +2,12 @@
 import "../styles/Card.css";
 
 function Card(props) {
+    // console.log(props);
     return (
-        <div className="cardContainer">
+        <div className="cardContainer" key={props.index}>
             <div className="box">
-                <img src={props.url} alt="" />
+                <img src={props.url} alt="image" />
+                {/* <p>{props.data}</p> */}
             </div>
         </div>
     );
