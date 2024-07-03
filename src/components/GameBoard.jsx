@@ -1,6 +1,7 @@
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ImageAPI } from "./ImageAPI";
 import { Loader } from "./Loader";
+import { Card } from "./Card";
 
 function GameBoard() {
     const newLoader = Loader();
@@ -23,7 +24,6 @@ function GameBoard() {
     };
 
     useEffect(() => {
-        
         async function getCardsFromApi() {
             const images = await ImageAPI();
             // console.log(images);
@@ -45,8 +45,8 @@ function GameBoard() {
                 margin: "4px",
                 padding: "2px",
                 display: "grid",
-                // gridTemplateColumns: "repeat(1fr,6)",
-                gridTemplateColumns: "1fr",
+                gridTemplateColumns: "repeat(1fr,6)",
+                // gridTemplateColumns: "1fr",
                 gridTemplateRows: "1fr 1fr",
                 gridAutoFlow: "column dense",
                 alignItems: "center",
