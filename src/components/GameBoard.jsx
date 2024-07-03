@@ -6,8 +6,25 @@ import { Loader } from "./Loader";
 function GameBoard() {
     const newLoader = Loader();
     let [imageArray, setImageArray] = useState([]);
+    // let imageArray = [];
+
+    let [grid, setGrid] = useState(imageArray);
+    // console.log(grid);
+
+    // Fisher-Yates Sorting Algorithm
+    const shuffle = () => {
+        console.log("shuffling");
+        let array = imageArray;
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        setImageArray(array);
+        // setGrid(imageArray); shuffles 3 times
+    };
 
     useEffect(() => {
+        
         async function getCardsFromApi() {
             const images = await ImageAPI();
             // console.log(images);
@@ -16,9 +33,10 @@ function GameBoard() {
                     return <Card url={ele.url} key={ele.key}></Card>;
                 })
             );
+            setGrid(imageArray);
         }
         getCardsFromApi();
-    }, []);
+    }, [imageArray]);
     // console.log(imageArray.length);
     return (
         <div
@@ -35,7 +53,8 @@ function GameBoard() {
                 justifyItems: "center",
             }}
         >
-            {imageArray.length === 0 ? newLoader : imageArray}
+            {imageArray.length === 0 ? newLoader : grid}
+            <button onClick={shuffle}>shuffle</button>
         </div>
     );
 }
