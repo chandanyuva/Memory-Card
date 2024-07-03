@@ -61,3 +61,13 @@
     width: 100%;
     object-fit: cover;
 }
+
+/* testing for letters */
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: black;
+}

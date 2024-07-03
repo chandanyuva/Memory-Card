@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Card } from "./Card";
+// import { useEffect, useState } from "react";
 import { ImageAPI } from "./ImageAPI";
 import { Loader } from "./Loader";
 
@@ -46,7 +45,8 @@ function GameBoard() {
                 margin: "4px",
                 padding: "2px",
                 display: "grid",
-                gridTemplateColumns: "repeat(1fr,6)",
+                // gridTemplateColumns: "repeat(1fr,6)",
+                gridTemplateColumns: "1fr",
                 gridTemplateRows: "1fr 1fr",
                 gridAutoFlow: "column dense",
                 alignItems: "center",
