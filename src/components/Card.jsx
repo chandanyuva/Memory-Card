@@ -4,7 +4,7 @@ import "../styles/Card.css";
 function Card(props) {
     // console.log(props);
     return (
-        <div className="cardContainer" key={props.index}>
+        <div className="cardContainer" onMouseDown={props.shuffleFun}>
             <div className="box">
                 <img src={props.url} alt="image" />
                 {/* <p>{props.data}</p> */}

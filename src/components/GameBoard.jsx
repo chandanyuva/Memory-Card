@@ -1,41 +1,68 @@
 import { useEffect, useState } from "react";
-import { ImageAPI } from "./ImageAPI";
+// import { ImageAPI } from "./ImageAPI";
 import { Loader } from "./Loader";
 import { Card } from "./Card";
+import { v4 as uuidv4 } from "uuid";
 
 function GameBoard() {
+    // "use strict";
     const newLoader = Loader();
-    let [imageArray, setImageArray] = useState([]);
+    let [imageArray, setImageArray] = useState(null);
     // let imageArray = [];
 
     let [grid, setGrid] = useState(imageArray);
     // console.log(grid);
 
-    // Fisher-Yates Sorting Algorithm
-    const shuffle = () => {
-        console.log("shuffling");
-        let array = imageArray;
+    const shuffle = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
-        setImageArray(array);
-        // setGrid(imageArray); shuffles 3 times
+        return array;
     };
 
+    // async function getCardsFromApi() {
+    //     const images = await ImageAPI();
+    //     // console.log(images);
+    //     setImageArray(
+    //         await images.map((ele) => {
+    //             return (
+    //                 <Card
+    //                     url={ele.url}
+    //                     key={uuidv4()}
+    //                     shuffleFun={handleClick}
+    //                 ></Card>
+    //             );
+    //         })
+    //     );
+    //     setGrid(() => imageArray);
+    // }
+    // getCardsFromApi();
     useEffect(() => {
-        async function getCardsFromApi() {
-            const images = await ImageAPI();
-            // console.log(images);
-            setImageArray(
-                await images.map((ele) => {
-                    return <Card url={ele.url} key={ele.key}></Card>;
-                })
-            );
-            setGrid(imageArray);
-        }
-        getCardsFromApi();
+        const handleClick = () => {
+            let currentArray = imageArray;
+            let shuffledArray = shuffle(currentArray);
+            setImageArray(shuffledArray);
+        };
+        fetch("https://picsum.photos/v2/list?page=2&limit=10")
+            .then((response) => response.json())
+            .then((json) => {
+                console.log(json);
+                setImageArray(
+                    json.map((ele) => {
+                        return (
+                            <Card
+                                url={ele.url}
+                                key={uuidv4()}
+                                shuffleFun={handleClick}
+                            ></Card>
+                        );
+                    })
+                );
+            })
+            .catch((error) => console.error(error));
     }, [imageArray]);
+    setGrid(imageArray);
     // console.log(imageArray.length);
     return (
         <div
@@ -53,8 +80,8 @@ function GameBoard() {
                 justifyItems: "center",
             }}
         >
-            {imageArray.length === 0 ? newLoader : grid}
-            <button onClick={shuffle}>shuffle</button>
+            {imageArray ? grid : newLoader}
+            {/* <button onClick={handleClick}>shuffle</button> */}
         </div>
     );
 }
