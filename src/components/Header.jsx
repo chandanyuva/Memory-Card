@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 function Header(props) {
-    console.info(
-        `BS:${props.scores.bestScore} CS:${props.scores.currentScore}`
-    );
+    // console.info(
+    //     `BS:${props.scores.bestScore} CS:${props.scores.currentScore}`
+    // );
     return (
         <div
             style={{

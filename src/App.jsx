@@ -5,6 +5,7 @@ import { useState } from "react";
 import "./styles/reset.css";
 
 function App() {
+    "use strict";
     const [currentScore, setCurrentScore] = useState(0);
     const [bestScore, setBestScore] = useState(0);
     const [gameStatus, setGameStatus] = useState(true);
