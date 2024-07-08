@@ -1,12 +1,46 @@
-// import { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Loader } from "./Loader";
-import { Grid } from "./Grid";
+import { Card } from "./Card";
 
 function GameBoard() {
-    let newLoader = Loader();
+    const loader = Loader();
 
-    // use react query lib
+    const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    // const [grid, setGrid] = useState(null);
+
+    useEffect(() => {
+        fetchImages();
+    }, []);
+
+    const handleClick = (e) => {
+        console.log(e);
+        const ifClicked = (currentId) => {
+            console.log(currentId)
+        };
+
+        const shuffled = [...images].sort(() => Math.random() - 0.5);
+        setImages(shuffled);
+    };
+
+    const fetchImages = async () => {
+        try {
+            const response = await fetch(
+                "https://picsum.photos/v2/list?page=2&limit=10"
+            );
+            const data = await response.json();
+            // console.log(data);
+            const urlData = await data.map((ele) => {
+                return { url: ele.download_url, key: uuidv4(), clicked: false };
+            });
+            // console.log(urlData);
+            setImages(urlData);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching images from API: ", error);
+        }
+    };
     return (
         <div
             style={{
@@ -23,8 +57,22 @@ function GameBoard() {
                 justifyItems: "center",
             }}
         >
-            {Grid ? Grid : newLoader}
-            {/* <button onClick={handleClick}>shuffle</button> */}
+            {loading ? (
+                loader
+            ) : (
+                <>
+                    {images.map((ele) => {
+                        return (
+                            <Card
+                                img={ele}
+                                key={ele.key}
+                                handleClick={handleClick}
+                            ></Card>
+                        );
+                    })}
+                </>
+            )}
+            {/* <button onClick={shuffleImages}>shuffle</button> */}
         </div>
     );
 }
