@@ -8,7 +8,6 @@ function App() {
     "use strict";
     const [currentScore, setCurrentScore] = useState(0);
     const [bestScore, setBestScore] = useState(0);
-    const [gameStatus, setGameStatus] = useState(true);
     return (
         <>
             <div
@@ -25,7 +24,7 @@ function App() {
                 <Header scores={{ bestScore, currentScore }}></Header>
                 <GameBoard
                     setScoresProp={{ setBestScore, setCurrentScore }}
-                    gameStatusPrp={{ gameStatus, setGameStatus }}
+                    getScoresProp={{bestScore,currentScore}}
                 ></GameBoard>
             </div>
         </>
