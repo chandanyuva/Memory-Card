@@ -6,12 +6,14 @@ import { Card } from "./Card";
 
 function GameBoard(props) {
     // console.log(props);
+    // const { currentScoreState, bestScoreState } = props;s
+    // console.log(props.currentScoreState.setCurrentScore);
+
+    // props.currentScoreState.setCurrentScore(11)
     const loader = Loader();
 
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [gameStatus, setGameStatus] = useState(true);
-    // const [grid, setGrid] = useState(null);
 
     useEffect(() => {
         fetchImages();
@@ -36,53 +38,69 @@ function GameBoard(props) {
     };
 
     const handleClick = (e) => {
-        if (props.getScoresProp.currentScore > 9) {
-            setGameStatus(false);
-            prompt("you won!!!");
-            props.setScoresProp.setCurrentScore(0);
-        }
         // console.log(e);
-        images.map((img) => {
-            if (img.clicked === true && img.key === e) {
-                console.log("already clicked");
-                setGameStatus(false);
-                console.log(images);
-            } else if (img.key === e) {
-                // console.log(img,e);
-                img.clicked = true;
-                props.setScoresProp.setCurrentScore((cur) => {
-                    return (cur += 1);
-                });
-                console.log(img);
-                console.log(images);
-            }
-        });
+        const index = images.findIndex((item) => item.key === e.target.id);
+        console.log(images[index].clicked);
+        if (images[index].clicked === false) {
+            console.log(index, "in if");
+            // Increase the round score
+            props.currentScoreState.setCurrentScore(
+                (prevScore) => prevScore + 1
+            );
+            // Mark the targeted image as clicked
+            setImages((prevArr) => {
+                // console.log(prevArr);
+                return shuffleArray(
+                    prevArr.map((item) => {
+                        // console.log(
+                        //     item.key === e.target.id
+                        //         ? { ...item, clicked: true }
+                        //         : item
+                        // );
+                        return item.key === e.target.id
+                            ? { ...item, clicked: false }
+                            : item;
+                    })
+                );
+            });
+            // console.log(images);
+        } else {
+            console.log(index, "in else");
+            resetRound();
+        }
+        // const shuffled = [...images].sort(() => Math.random() - 0.5);
+        // setImages(shuffled);
+    };
 
-        const shuffled = [...images].sort(() => Math.random() - 0.5);
-        setImages(shuffled);
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    };
+
+    const resetRound = () => {
+        console.log("reset");
+        // Reset round score
+        props.currentScoreState.setCurrentScore(0);
+        // Change all images back to unclicked
+        setImages((prevArr) => {
+            return prevArr.map((item) => {
+                return { ...item, clicked: false };
+            });
+        });
     };
 
     useEffect(() => {
-        gameLoop();
-    }, [gameStatus]);
-    const gameLoop = () => {
-        if (gameStatus) {
-            console.log("running GameLoop");
-            props.setScoresProp.setCurrentScore(0);
-        } else {
-            console.log("GameLoop not running");
-            props.setScoresProp.setCurrentScore(0);
-            props.getScoresProp.currentScore > props.getScoresProp.bestScore
-                ? () => {
-                      props.setScoresProp.setBestScore(
-                          props.getScoresProp.currentScore
-                      );
-                      console.log("updating");
-                  }
-                : console.log("not updating best score");
-            setGameStatus(true);
-        }
-    };
+        if (
+            props.currentScoreState.currentScore >
+            props.bestScoreState.bestScore
+        )
+            props.bestScoreState.setBestScore(
+                props.currentScoreState.currentScore
+            );
+    }, [props.currentScoreState.currentScore]);
 
     return (
         <div

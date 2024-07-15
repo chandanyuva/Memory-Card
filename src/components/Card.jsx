@@ -6,12 +6,13 @@ function Card(props) {
     return (
         <div
             className="cardContainer"
-            onClick={() => {
-                props.handleClick(props.img.key);
+            onClick={(e) => {
+                // props.handleClick(props.img.key);
+                props.handleClick(e);
             }}
         >
             <div className="box">
-                <img src={props.img.url} alt="image" />
+                <img src={props.img.url} alt="image" id={props.img.key} />
                 {/* <p>{props.data}</p> */}
             </div>
         </div>

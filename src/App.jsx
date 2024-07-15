@@ -20,11 +20,11 @@ function App() {
                     gap: "4px",
                     padding: "4px",
                 }}
-            >
-                <Header scores={{ bestScore, currentScore }}></Header>
+            > <Header scores={{ bestScore, currentScore }}></Header>
+               
                 <GameBoard
-                    setScoresProp={{ setBestScore, setCurrentScore }}
-                    getScoresProp={{bestScore,currentScore}}
+                    currentScoreState={{ currentScore, setCurrentScore }}
+                    bestScoreState={{ bestScore, setBestScore }}
                 ></GameBoard>
             </div>
         </>
