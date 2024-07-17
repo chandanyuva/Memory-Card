@@ -5,11 +5,6 @@ import { Loader } from "./Loader";
 import { Card } from "./Card";
 
 function GameBoard(props) {
-    // console.log(props);
-    // const { currentScoreState, bestScoreState } = props;s
-    // console.log(props.currentScoreState.setCurrentScore);
-
-    // props.currentScoreState.setCurrentScore(11)
     const loader = Loader();
 
     const [images, setImages] = useState([]);
@@ -25,11 +20,9 @@ function GameBoard(props) {
                 "https://picsum.photos/v2/list?page=2&limit=10"
             );
             const data = await response.json();
-            // console.log(data);
             const urlData = await data.map((ele) => {
                 return { url: ele.download_url, key: uuidv4(), clicked: false };
             });
-            // console.log(urlData);
             setImages(urlData);
             setLoading(false);
         } catch (error) {
@@ -38,38 +31,28 @@ function GameBoard(props) {
     };
 
     const handleClick = (e) => {
-        // console.log(e);
+        if (props.currentScoreState.currentScore >= 9) {
+            alert("You won!!!");
+        }
         const index = images.findIndex((item) => item.key === e.target.id);
-        console.log(images[index].clicked);
         if (images[index].clicked === false) {
             console.log(index, "in if");
-            // Increase the round score
             props.currentScoreState.setCurrentScore(
                 (prevScore) => prevScore + 1
             );
-            // Mark the targeted image as clicked
-            setImages((prevArr) => {
-                // console.log(prevArr);
-                return shuffleArray(
-                    prevArr.map((item) => {
-                        // console.log(
-                        //     item.key === e.target.id
-                        //         ? { ...item, clicked: true }
-                        //         : item
-                        // );
-                        return item.key === e.target.id
-                            ? { ...item, clicked: false }
-                            : item;
-                    })
-                );
+            setImages((oldArray) => {
+                let newArray = oldArray.map((img) => {
+                    return img.key === e.target.id
+                        ? { ...img, clicked: true }
+                        : img;
+                });
+                let shuffledArray = shuffleArray(newArray);
+                return shuffledArray;
             });
-            // console.log(images);
         } else {
             console.log(index, "in else");
             resetRound();
         }
-        // const shuffled = [...images].sort(() => Math.random() - 0.5);
-        // setImages(shuffled);
     };
 
     const shuffleArray = (array) => {
@@ -82,9 +65,7 @@ function GameBoard(props) {
 
     const resetRound = () => {
         console.log("reset");
-        // Reset round score
         props.currentScoreState.setCurrentScore(0);
-        // Change all images back to unclicked
         setImages((prevArr) => {
             return prevArr.map((item) => {
                 return { ...item, clicked: false };
@@ -111,7 +92,6 @@ function GameBoard(props) {
                 padding: "2px",
                 display: "grid",
                 gridTemplateColumns: "repeat(1fr,6)",
-                // gridTemplateColumns: "1fr",
                 gridTemplateRows: "1fr 1fr",
                 gridAutoFlow: "column dense",
                 alignItems: "center",
@@ -133,7 +113,6 @@ function GameBoard(props) {
                     })}
                 </>
             )}
-            {/* <button onClick={shuffleImages}>shuffle</button> */}
         </div>
     );
 }
